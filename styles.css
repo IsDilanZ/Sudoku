@@ -1,0 +1,43 @@
+body{
+    display: grid;
+    background: linear-gradient(to left, rgb(21,154,156),rgb(0,35,51));
+    font-family: 'Lucid Sans','Lucid Sans Regular','Lucid Grande','Lucid Sans Unicorde',Geneva, Verdana, sans-serif;
+}
+
+
+table,th,td{
+    padding: 20px;
+    border: 1px solid white;
+    border-collapse: collapse ;
+    
+}
+
+th,td{
+    background-color:rgb(168,217,228);
+}
+
+#mainTable{
+    margin-inline: 35%;
+}
+
+h1{
+    text-align: center;
+    color: white;
+}
+
+hr{
+
+    margin:  10px 0px 10px 0px;
+}
+
+#numberButtons{
+    margin-inline: 40%;
+    background-color: white;
+    padding: fit-content;
+}
+
+.eachButton{
+    margin: 5px;
+    margin-inline-start: 5%;
+}
+
