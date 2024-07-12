@@ -1,38 +1,16 @@
-let solution, originalGrid, timerInterval;
-let secondsElapsed = 0;
+let solution, originalGrid;
 
 document.addEventListener("DOMContentLoaded", function() {
     newGame();
 });
 
-function startTimer() {
-    const timerElement = document.getElementById("timer");
-    secondsElapsed = 0;
-    timerElement.textContent = formatTime(secondsElapsed);
-    timerInterval = setInterval(() => {
-        secondsElapsed++;
-        timerElement.textContent = formatTime(secondsElapsed);
-    }, 1000);
-}
-
-function stopTimer() {
-    clearInterval(timerInterval);
-}
-
-function formatTime(seconds) {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
-}
 
 function newGame() {
-    stopTimer();
     const sudokuGrid = document.getElementById("sudoku-grid");
     sudokuGrid.innerHTML = ''; // Clear existing grid
     const grid = generateSudoku();
     originalGrid = grid.map(row => row.slice());
-    solution = solveSudoku(grid.map(row => row.slice()));
-    startTimer();
+    solution = solveSudoku(grid.map(row => row.slice()));//rebanada slice
 
     grid.forEach((row, rowIndex) => {
         row.forEach((cell, cellIndex) => {
@@ -76,41 +54,6 @@ function checkSolution() {
         alert("There are errors in your solution. Please try again.");
     }
 }
-
-function getClue() {
-    const sudokuGrid = document.getElementById("sudoku-grid");
-    const inputs = sudokuGrid.querySelectorAll("input");
-    const emptyCells = [];
-
-    inputs.forEach((input, index) => {
-        const row = Math.floor(index / 9);
-        const col = index % 9;
-
-        if (input.value === '') {
-            emptyCells.push({ row, col, index });
-        }
-    });
-
-    if (emptyCells.length > 0) {
-        const randomCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-        inputs[randomCell.index].value = solution[randomCell.row][randomCell.col];
-        inputs[randomCell.index].classList.add("pre-filled");
-        inputs[randomCell.index].disabled = true;
-    }
-}
-
-function eraseBoard() {
-    const sudokuGrid = document.getElementById("sudoku-grid");
-    const inputs = sudokuGrid.querySelectorAll("input");
-
-    inputs.forEach((input, index) => {
-        if (!input.classList.contains("pre-filled")) {
-            input.value = '';
-            input.style.backgroundColor = '';
-        }
-    });
-}
-
 function generateSudoku() {
     const board = Array.from({ length: 9 }, () => Array(9).fill(0));
     fillBoard(board);
@@ -135,6 +78,7 @@ function fillBoard(board) {
 
     return false;
 }
+
 
 function solveSudoku(board) {
     const emptyCells = findEmptyCells(board);
@@ -202,20 +146,3 @@ function shuffleArray(array) {
     }
     return array;
 }
-
-function saveScore(time, difficulty) {
-    const scoresTable = document.getElementById("scores-table").querySelector("tbody");
-    const newRow = scoresTable.insertRow();
-    newRow.insertCell(0).textContent = formatTime(time);
-    newRow.insertCell(1).textContent = difficulty;
-    // Here, add code to save the score to a database via an API call if needed.
-    // Example:
-    // fetch('/api/save-score', {
-    //     method: 'POST',
-    //     headers: {
-    //         'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify({ time, difficulty })
-    // });
-}
-
