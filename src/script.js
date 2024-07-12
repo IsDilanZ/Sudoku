@@ -133,7 +133,7 @@ function isValidMove(board, row, col, num) {
 }
 
 function removeCells(board, count) {
-    while (count > 0) { // Mientras queden celdas por eliminar
+    while (count > difficulty.insane) { // Mientras queden celdas por eliminar, tambien se establece la dificultad del sudoku
         const row = Math.floor(Math.random() * 9); // Genera una fila aleatoria
         const col = Math.floor(Math.random() * 9); // Genera una columna aleatoria
 
