@@ -168,7 +168,11 @@ function selectionOption(){
 
 
 function removeCells(board, count) {
+<<<<<<< HEAD
     while (count > selectionOption()) { // Mientras queden celdas por eliminar
+=======
+    while (count > difficulty.insane) { // Mientras queden celdas por eliminar, tambien se establece la dificultad del sudoku
+>>>>>>> e426c39bc5c86d8d6d9ddd527a77171cb3a0fbc6
         const row = Math.floor(Math.random() * 9); // Genera una fila aleatoria
         const col = Math.floor(Math.random() * 9); // Genera una columna aleatoria
 
