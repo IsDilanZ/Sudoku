@@ -167,7 +167,7 @@ function selectionOption(){
 
 
 function removeCells(board, count) {
-    while (count > 0 ) { // Mientras queden celdas por eliminar
+    while (count > selectionOption() ) { // Mientras queden celdas por eliminar
         const row = Math.floor(Math.random() * 9); // Genera una fila aleatoria
         const col = Math.floor(Math.random() * 9); // Genera una columna aleatoria
 
