@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 function getSelectionOption(){
     var dropdown = document.getElementById('options');
     var selectedValue = dropdown.value;
@@ -17,11 +17,5 @@ const difficulty = {
 }
 
 
-=======
-const difficulty = {
-    easy: 20,
-    medium: 0,
-    hard: -20,
-    insane: -30
-}
->>>>>>> e426c39bc5c86d8d6d9ddd527a77171cb3a0fbc6
+
+

@@ -63,7 +63,6 @@ function generateSudoku() {
     removeCells(board, 40); // Llama a la función para eliminar 40 celdas de la cuadrícula
     return board; // Devuelve la cuadrícula generada
 }
-
 function fillBoard(board) {
     const emptyCells = findEmptyCells(board); // Encuentra todas las celdas vacías en la cuadrícula
     if (emptyCells.length === 0) return true; // Si no hay celdas vacías, la cuadrícula está completa y válida
@@ -168,11 +167,7 @@ function selectionOption(){
 
 
 function removeCells(board, count) {
-<<<<<<< HEAD
-    while (count > selectionOption()) { // Mientras queden celdas por eliminar
-=======
-    while (count > difficulty.insane) { // Mientras queden celdas por eliminar, tambien se establece la dificultad del sudoku
->>>>>>> e426c39bc5c86d8d6d9ddd527a77171cb3a0fbc6
+    while (count > 0 ) { // Mientras queden celdas por eliminar
         const row = Math.floor(Math.random() * 9); // Genera una fila aleatoria
         const col = Math.floor(Math.random() * 9); // Genera una columna aleatoria
 
