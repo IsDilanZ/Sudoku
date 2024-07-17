@@ -1,14 +1,16 @@
 body {
+    
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
     font-family: Arial, sans-serif;
     background: url('images/Backgroung.png') no-repeat;
+    background-attachment: fixed;
     height: 100vh;
     background-size:cover ;
     background-position: center;
-    display: flex;
+    display: grid;
     align-items: center ;
     padding: 0 10%;
     color: white;
@@ -23,6 +25,14 @@ body {
     margin-bottom: 20px;
 }
 
+#options{
+    margin: 5px;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+
 .buttons {
     margin-bottom: 20px;
 }
@@ -34,12 +44,21 @@ body {
     cursor: pointer;
 }
 
+.options{
+    margin: 5px;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
 .sudoku-grid {
     display: grid;
     grid-template-columns: repeat(9, 40px);
     grid-template-rows: repeat(9, 40px);
     gap: 1px;
     margin-bottom: 20px;
+    
 
 }
 
@@ -74,5 +93,8 @@ table, th, td {
 th, td {
     padding: 10px;
     text-align: center;
+}
+#scores-table{
+    margin-bottom: 300px;
 }
 

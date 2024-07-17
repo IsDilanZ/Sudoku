@@ -132,8 +132,43 @@ function isValidMove(board, row, col, num) {
     return true; // Si no hay conflictos, devuelve true
 }
 
+
+
+function selectionOption(){
+    
+    switch (getSelectionOption()){
+        case 'veryEasy':
+            difficultySelected = difficulty.veryeasy;
+            break;
+
+        case 'easy':
+            difficultySelected = difficulty.easy;
+            break;   
+    
+        case 'hard':
+            difficultySelected = difficulty.hard;
+            break; 
+        case 'expert':
+            difficultySelected = difficulty.expert;
+            break;
+        case 'insane':
+            difficultySelected = difficulty.insane;
+            break;
+        case 'hiHuman':
+            difficultySelected = difficulty.hiHuman;
+            break;
+        default:
+            difficultySelected = difficulty.medium;    
+                              
+
+    }
+  return difficultySelected;
+
+}
+
+
 function removeCells(board, count) {
-    while (count > 0) { // Mientras queden celdas por eliminar
+    while (count > selectionOption()) { // Mientras queden celdas por eliminar
         const row = Math.floor(Math.random() * 9); // Genera una fila aleatoria
         const col = Math.floor(Math.random() * 9); // Genera una columna aleatoria
 
