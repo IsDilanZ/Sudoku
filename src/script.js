@@ -1,12 +1,24 @@
-let solution, originalGrid;  
+let solution, originalGrid;
+
+var segundos = 0;
+var minutos = 0;
+var horas = 0;
+var control; // Variable para almacenar el intervalo del cronómetro
 
 document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("save-score-button").style.display = "none"; // Ocultar el botón de guardar puntaje al cargar la página
     newGame(); // Llama a la función newGame cuando el contenido del documento se ha cargado completamente
 });
 
-
-
 function newGame() {
+    if (control) {
+        clearInterval(control); // Detener el cronómetro existente si hay uno
+    }
+    resetTime(); // Reiniciar los valores de tiempo
+    control = setInterval(cronometro, 1000); // Intervalo cada segundo (1000 milisegundos)
+    document.getElementById("inicio").disabled = false;
+    document.getElementById("reinicio").disabled = false;
+
     const sudokuGrid = document.getElementById("sudoku-grid"); // Obtiene el elemento del DOM con el id "sudoku-grid"
     sudokuGrid.innerHTML = ''; // Limpia el contenido existente del grid
 
@@ -29,6 +41,8 @@ function newGame() {
             sudokuGrid.appendChild(input); // Añade el input al grid de Sudoku en el DOM
         });
     });
+
+    document.getElementById("save-score-button").style.display = "none"; // Ocultar el botón de guardar puntaje al iniciar un nuevo juego
 }
 
 function checkSolution() {
@@ -49,12 +63,21 @@ function checkSolution() {
     });
 
     if (correct) { // Si todos los valores son correctos
-        stopTimer(); // Detiene el temporizador
-        alert("Congratulations! You've solved the Sudoku."); // Muestra una alerta de felicitación
-        saveScore(secondsElapsed, 'Medium'); // Guarda la puntuación, asumiendo que la dificultad es 'Medium'
+        clearInterval(control); // Detener el cronómetro
+        alert("¡Felicidades! Has resuelto el Sudoku."); // Muestra una alerta de felicitación
+        document.getElementById("save-score-button").style.display = "block"; // Muestra el botón de guardar puntaje
     } else {
-        alert("There are errors in your solution. Please try again."); // Muestra una alerta indicando que hay errores
+        alert("Hay errores en tu solución. Por favor, inténtalo de nuevo."); // Muestra una alerta indicando que hay errores
     }
+}
+
+function resetTime() {
+    segundos = 0;
+    minutos = 0;
+    horas = 0;
+    document.getElementById("Horas").innerText = "00";
+    document.getElementById("Minutos").innerText = ":00";
+    document.getElementById("Segundos").innerText = ":00";
 }
 
 function generateSudoku() {
@@ -63,6 +86,7 @@ function generateSudoku() {
     removeCells(board, 40); // Llama a la función para eliminar 40 celdas de la cuadrícula
     return board; // Devuelve la cuadrícula generada
 }
+
 function fillBoard(board) {
     const emptyCells = findEmptyCells(board); // Encuentra todas las celdas vacías en la cuadrícula
     if (emptyCells.length === 0) return true; // Si no hay celdas vacías, la cuadrícula está completa y válida
@@ -81,8 +105,6 @@ function fillBoard(board) {
     return false; // Si no se puede colocar ningún número válido, devuelve false
 }
 
-
-
 function solveSudoku(board) {
     const emptyCells = findEmptyCells(board); // Encuentra todas las celdas vacías en la cuadrícula
     if (emptyCells.length === 0) return board; // Si no hay celdas vacías, la cuadrícula está resuelta y se devuelve
@@ -99,7 +121,6 @@ function solveSudoku(board) {
 
     return false; // Si no se puede colocar ningún número válido, devuelve false indicando que no se puede resolver desde esta configuración
 }
-
 
 function findEmptyCells(board) {
     const emptyCells = []; // Crea un array vacío para almacenar las celdas vacías
@@ -131,19 +152,14 @@ function isValidMove(board, row, col, num) {
     return true; // Si no hay conflictos, devuelve true
 }
 
-
-
 function selectionOption(){
-    
     switch (getSelectionOption()){
         case 'veryEasy':
             difficultySelected = difficulty.veryeasy;
             break;
-
         case 'easy':
             difficultySelected = difficulty.easy;
             break;   
-    
         case 'hard':
             difficultySelected = difficulty.hard;
             break; 
@@ -157,17 +173,13 @@ function selectionOption(){
             difficultySelected = difficulty.hiHuman;
             break;
         default:
-            difficultySelected = difficulty.medium;    
-                              
-
+            difficultySelected = difficulty.medium;                              
     }
-  return difficultySelected;
-
+    return difficultySelected;
 }
 
-
 function removeCells(board, count) {
-    while (count > selectionOption() ) { // Mientras queden celdas por eliminar
+    while (count > selectionOption()) { // Mientras queden celdas por eliminar
         const row = Math.floor(Math.random() * 9); // Genera una fila aleatoria
         const col = Math.floor(Math.random() * 9); // Genera una columna aleatoria
 
@@ -184,4 +196,64 @@ function shuffleArray(array) {
         [array[i], array[j]] = [array[j], array[i]]; // Intercambia los elementos en los índices i y j
     }
     return array; // Devuelve el array barajado
+}
+
+function saveScoreAndReset() {
+    const difficultySelected = selectionOption(); // Obtener la dificultad seleccionada
+    const name = prompt("Introduce tu nombre para guardar el puntaje:"); // Solicita el nombre del jugador
+    saveScore(name, getTime(), difficultySelected); // Guarda el puntaje con el tiempo transcurrido y la dificultad
+    document.getElementById("save-score-button").style.display = "none"; // Oculta el botón después de guardar el puntaje
+    resetGame(); // Reinicia el juego o realiza cualquier otra acción necesaria
+}
+
+function getTime() {
+    return horas + ":" + minutos + ":" + segundos; // Devuelve el tiempo en formato HH:MM:SS
+}
+
+function saveScore(name, time, difficulty) {
+    const scoresTable = document.getElementById("scores-table").querySelector("tbody");
+    const newRow = scoresTable.insertRow();
+    newRow.insertCell(0).innerText = name;
+    newRow.insertCell(1).innerText = time;
+    newRow.insertCell(2).innerText = difficulty;
+}
+
+function resetGame() {
+    resetTime(); // Reiniciar los valores de tiempo
+    document.getElementById("sudoku-grid").innerHTML = '';
+    document.getElementById("inicio").disabled = false;
+    document.getElementById("reinicio").disabled = true;
+    document.getElementById("save-score-button").style.display = "none"; // Ocultar el botón de guardar puntaje al reiniciar el juego
+}
+
+function cronometro() {
+    segundos++;
+
+    if (segundos < 10) {
+        document.getElementById("Segundos").innerHTML = ":0" + segundos;
+    } else {
+        document.getElementById("Segundos").innerHTML = ":" + segundos;
+    }
+
+    if (segundos == 60) {
+        segundos = 0;
+        minutos++;
+
+        if (minutos < 10) {
+            document.getElementById("Minutos").innerHTML = ":0" + minutos;
+        } else {
+            document.getElementById("Minutos").innerHTML = ":" + minutos;
+        }
+
+        if (minutos == 60) {
+            minutos = 0;
+            horas++;
+
+            if (horas < 10) {
+                document.getElementById("Horas").innerHTML = "0" + horas;
+            } else {
+                document.getElementById("Horas").innerHTML = horas;
+            }
+        }
+    }
 }

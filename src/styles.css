@@ -98,3 +98,11 @@ th, td {
     margin-bottom: 300px;
 }
 
+
+
+.timer{
+	float: left;
+	font-size: 80px;
+	font-family: Courier,sans-serif;
+	color: white;
+}
