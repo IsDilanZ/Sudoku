@@ -58,8 +58,7 @@ body {
     grid-template-rows: repeat(9, 40px);
     gap: 1px;
     margin-bottom: 20px;
-    
-
+    margin-inline: 2%;
 }
 
 .sudoku-grid input {
@@ -98,11 +97,13 @@ th, td {
     margin-bottom: 300px;
 }
 
-
+#TimeContainer{
+    display: inline-flex;
+}
 
 .timer{
 	float: left;
-	font-size: 80px;
-	font-family: Courier,sans-serif;
+	font-size: 30px;
+	font-family: Arial, sans-serif;
 	color: white;
 }
