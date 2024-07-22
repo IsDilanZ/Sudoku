@@ -1,13 +1,9 @@
 let solution, originalGrid;
 
-var segundos = 0;
-var minutos = 0;
-var horas = 0;
-var control; // Variable para almacenar el intervalo del cronómetro
-
 document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("save-score-button").style.display = "none"; // Ocultar el botón de guardar puntaje al cargar la página
     newGame(); // Llama a la función newGame cuando el contenido del documento se ha cargado completamente
+    updateScoresTable(); // Actualizar la tabla al cargar la página
 });
 
 function newGame() {
@@ -64,21 +60,13 @@ function checkSolution() {
 
     if (correct) { // Si todos los valores son correctos
         clearInterval(control); // Detener el cronómetro
-        alert("¡Felicidades! Has resuelto el Sudoku."); // Muestra una alerta de felicitación
+        alert("Congratulations! You have solved the Sudoku."); // Muestra una alerta de felicitación
         document.getElementById("save-score-button").style.display = "block"; // Muestra el botón de guardar puntaje
     } else {
-        alert("Hay errores en tu solución. Por favor, inténtalo de nuevo."); // Muestra una alerta indicando que hay errores
+        alert("It seems you haven't solved the puzzle yet. Keep trying! :)"); // Muestra una alerta indicando que hay errores
     }
 }
 
-function resetTime() {
-    segundos = 0;
-    minutos = 0;
-    horas = 0;
-    document.getElementById("Horas").innerText = "00";
-    document.getElementById("Minutos").innerText = ":00";
-    document.getElementById("Segundos").innerText = ":00";
-}
 
 function generateSudoku() {
     const board = Array.from({ length: 9 }, () => Array(9).fill(0)); // Crea una cuadrícula de 9x9 rellena de ceros
@@ -152,34 +140,9 @@ function isValidMove(board, row, col, num) {
     return true; // Si no hay conflictos, devuelve true
 }
 
-function selectionOption(){
-    switch (getSelectionOption()){
-        case 'veryEasy':
-            difficultySelected = difficulty.veryeasy;
-            break;
-        case 'easy':
-            difficultySelected = difficulty.easy;
-            break;   
-        case 'hard':
-            difficultySelected = difficulty.hard;
-            break; 
-        case 'expert':
-            difficultySelected = difficulty.expert;
-            break;
-        case 'insane':
-            difficultySelected = difficulty.insane;
-            break;
-        case 'hiHuman':
-            difficultySelected = difficulty.hiHuman;
-            break;
-        default:
-            difficultySelected = difficulty.medium;                              
-    }
-    return difficultySelected;
-}
 
 function removeCells(board, count) {
-    while (count > selectionOption()) { // Mientras queden celdas por eliminar
+    while (count > selectedOption()) { // Mientras queden celdas por eliminar
         const row = Math.floor(Math.random() * 9); // Genera una fila aleatoria
         const col = Math.floor(Math.random() * 9); // Genera una columna aleatoria
 
@@ -198,25 +161,6 @@ function shuffleArray(array) {
     return array; // Devuelve el array barajado
 }
 
-function saveScoreAndReset() {
-    const difficultySelected = selectionOption(); // Obtener la dificultad seleccionada
-    const name = prompt("Introduce tu nombre para guardar el puntaje:"); // Solicita el nombre del jugador
-    saveScore(name, getTime(), difficultySelected); // Guarda el puntaje con el tiempo transcurrido y la dificultad
-    document.getElementById("save-score-button").style.display = "none"; // Oculta el botón después de guardar el puntaje
-    resetGame(); // Reinicia el juego o realiza cualquier otra acción necesaria
-}
-
-function getTime() {
-    return horas + ":" + minutos + ":" + segundos; // Devuelve el tiempo en formato HH:MM:SS
-}
-
-function saveScore(name, time, difficulty) {
-    const scoresTable = document.getElementById("scores-table").querySelector("tbody");
-    const newRow = scoresTable.insertRow();
-    newRow.insertCell(0).innerText = name;
-    newRow.insertCell(1).innerText = time;
-    newRow.insertCell(2).innerText = difficulty;
-}
 
 function resetGame() {
     resetTime(); // Reiniciar los valores de tiempo
@@ -226,34 +170,4 @@ function resetGame() {
     document.getElementById("save-score-button").style.display = "none"; // Ocultar el botón de guardar puntaje al reiniciar el juego
 }
 
-function cronometro() {
-    segundos++;
 
-    if (segundos < 10) {
-        document.getElementById("Segundos").innerHTML = ":0" + segundos;
-    } else {
-        document.getElementById("Segundos").innerHTML = ":" + segundos;
-    }
-
-    if (segundos == 60) {
-        segundos = 0;
-        minutos++;
-
-        if (minutos < 10) {
-            document.getElementById("Minutos").innerHTML = ":0" + minutos;
-        } else {
-            document.getElementById("Minutos").innerHTML = ":" + minutos;
-        }
-
-        if (minutos == 60) {
-            minutos = 0;
-            horas++;
-
-            if (horas < 10) {
-                document.getElementById("Horas").innerHTML = "0" + horas;
-            } else {
-                document.getElementById("Horas").innerHTML = horas;
-            }
-        }
-    }
-}

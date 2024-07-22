@@ -1,0 +1,21 @@
+{
+  "name": "sudoku_project",
+  "version": "1.0.0",
+  "description": "Programation",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "sqlite3": "^5.1.7",
+    "sweetalert2": "^11.12.3"
+  },
+  "devDependencies": {
+    "electron": "^31.2.1"
+  }
+}
