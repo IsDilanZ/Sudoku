@@ -15,5 +15,9 @@ Sudoku is a mathematical puzzle in which the objective is to fill a 9x9 grid div
 
 
 ![image](https://github.com/user-attachments/assets/b25e6a59-a7d1-464a-a3af-bdc914fc7a42)
-![image](https://github.com/user-attachments/assets/2b73c7cf-507a-496c-acc5-7d58be625d49)
+![image](https://github.com/user-attachments/assets/031a82b6-14dd-48fd-bf19-1ecbe9589b7b)
+
+## Finished Project
+![image](https://github.com/user-attachments/assets/ed384d8d-a59b-4431-b80d-2d3859767fd2)
+
 
