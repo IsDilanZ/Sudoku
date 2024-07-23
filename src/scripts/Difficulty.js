@@ -1,5 +1,7 @@
 let difficultySelected, stringSelected;
 
+
+//This object maps difficulty names to numeric values ​​representing the difficulty level.
 const difficulty = {
     veryeasy: 20,
     easy: 20,
@@ -10,6 +12,7 @@ const difficulty = {
     hiHuman: -30,
 }
 
+//This object maps difficulty names to their string representations.
 const diffcultyString ={
     veryeasy: "Very Easy",
     easy: "Easy",
@@ -20,12 +23,17 @@ const diffcultyString ={
     hiHuman: "InHuman",
 }
 
+//The getSelectionOption function: Gets the selected value in a dropdown with the ID options.
 function getSelectionOption(){
     var dropdown = document.getElementById('options');
     var selectedValue = dropdown.value;
     return selectedValue;
 }
 
+
+/*The selectedOption function: Based on the selected value, sets and returns
+ the numeric value of the selected difficulty.*/
+ 
 function selectedOption(){
     switch (getSelectionOption()){
         case 'veryEasy':
@@ -51,6 +59,9 @@ function selectedOption(){
     }
     return difficultySelected;
 }
+
+/*The selectedOptionAsString function: Based on the selected value,
+ sets and returns the string representation of the selected difficulty.*/
 
 function selectedOptionAsString(){
     switch (getSelectionOption()){

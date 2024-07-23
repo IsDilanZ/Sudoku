@@ -11,9 +11,9 @@ let db = new sqlite3.Database('./dataBase.db', (err) => {
 });
 
 app.use(express.json());
-app.use(express.static(__dirname)); // Servir archivos estáticos desde el directorio actual
+app.use(express.static(__dirname)); // Serve static files from the current directory
 
-// Ruta para obtener los datos de los jugadores
+// Path to get player data
 app.get('/players', (req, res) => {
     const sql = 'SELECT * FROM players';
     db.all(sql, [], (err, rows) => {
@@ -28,7 +28,7 @@ app.get('/players', (req, res) => {
     });
 });
 
-// Ruta para agregar un nuevo jugador
+// Route to add a new player
 app.post('/players', (req, res) => {
     const { name, time, difficulty } = req.body;
     const sql = 'INSERT INTO players (name, time, difficulty) VALUES (?, ?, ?)';

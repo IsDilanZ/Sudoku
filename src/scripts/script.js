@@ -1,173 +1,222 @@
 let solution, originalGrid;
 
+/*This function() sets up some UI elements and calls additional functions to initialize 
+a new game and update the scoreboard when the page fully loads using DOMContentLoaded. */
+
 document.addEventListener("DOMContentLoaded", function() {
-    document.getElementById("save-score-button").style.display = "none"; // Ocultar el botón de guardar puntaje al cargar la página
-    newGame(); // Llama a la función newGame cuando el contenido del documento se ha cargado completamente
-    updateScoresTable(); // Actualizar la tabla al cargar la página
+    document.getElementById("save-score-button").style.display = "none";
+    newGame();
+    updateScoresTable(); 
 });
+
+
+
+/*The newGame function resets the timer, enables the start and reset buttons,
+ generates and displays a new Sudoku puzzle in the UI, and hides the save score button. */
 
 function newGame() {
     if (control) {
-        clearInterval(control); // Detener el cronómetro existente si hay uno
+        clearInterval(control); 
     }
-    resetTime(); // Reiniciar los valores de tiempo
-    control = setInterval(cronometro, 1000); // Intervalo cada segundo (1000 milisegundos)
+    resetTime();  
+    control = setInterval(cronometro, 1000);  
     document.getElementById("inicio").disabled = false;
     document.getElementById("reinicio").disabled = false;
 
-    const sudokuGrid = document.getElementById("sudoku-grid"); // Obtiene el elemento del DOM con el id "sudoku-grid"
-    sudokuGrid.innerHTML = ''; // Limpia el contenido existente del grid
+    const sudokuGrid = document.getElementById("sudoku-grid");  
+    sudokuGrid.innerHTML = '';  
 
-    const grid = generateSudoku(); // Genera un nuevo Sudoku y lo almacena en la variable grid
-    originalGrid = grid.map(row => row.slice()); // Copia el grid original para poder comparar más tarde
-    solution = solveSudoku(grid.map(row => row.slice())); // Resuelve el Sudoku generado y almacena la solución
+    const grid = generateSudoku();  
+    originalGrid = grid.map(row => row.slice());  
+    solution = solveSudoku(grid.map(row => row.slice()));  
 
-    grid.forEach((row, rowIndex) => { // Itera sobre cada fila del grid
-        row.forEach((cell, cellIndex) => { // Itera sobre cada celda de la fila
-            const input = document.createElement("input"); // Crea un nuevo elemento input
-            input.type = "text"; // Establece el tipo del input como texto
-            input.maxLength = "1"; // Establece la longitud máxima del input a 1 carácter
+/*This code block fills the Sudoku grid in the UI by looping over each row and cell
+ of the generated grid. For each cell, it creates a text input element (input).
+  If the cell is not empty (cell !== 0), it sets the input value, adds a CSS class 
+  of "pre-filled", and disables the input field so that it cannot be edited. It then 
+  adds the input element to the Sudoku grid in the DOM. */
 
-            if (cell !== 0) { // Si la celda no está vacía
-                input.value = cell; // Establece el valor del input con el valor de la celda
-                input.classList.add("pre-filled"); // Añade la clase "pre-filled" al input
-                input.disabled = true; // Deshabilita el input para que no se pueda editar
+
+    grid.forEach((row, rowIndex) => {  
+        row.forEach((cell, cellIndex) => {  
+            const input = document.createElement("input");  
+            input.type = "text";  
+            input.maxLength = "1";  
+
+            if (cell !== 0) {  
+                input.value = cell;  
+                input.classList.add("pre-filled");  
+                input.disabled = true;  
             }
 
-            sudokuGrid.appendChild(input); // Añade el input al grid de Sudoku en el DOM
+            sudokuGrid.appendChild(input);  
         });
     });
 
-    document.getElementById("save-score-button").style.display = "none"; // Ocultar el botón de guardar puntaje al iniciar un nuevo juego
+    document.getElementById("save-score-button").style.display = "none";  
 }
 
+
+/* The checkSolution function checks whether the solution entered by the
+ user into the Sudoku grid is correct, changes the background colors of the cells
+  depending on whether they are correct or incorrect, and displays appropriate
+   messages and actions based on the result of the check.*/
+
 function checkSolution() {
-    const sudokuGrid = document.getElementById("sudoku-grid"); // Obtiene el elemento del DOM con el id "sudoku-grid"
-    const inputs = sudokuGrid.querySelectorAll("input"); // Obtiene todos los elementos input dentro del grid
-    let correct = true; // Inicializa una variable para rastrear si la solución es correcta
+    const sudokuGrid = document.getElementById("sudoku-grid"); 
+    const inputs = sudokuGrid.querySelectorAll("input"); 
+    let correct = true; 
 
-    inputs.forEach((input, index) => { // Itera sobre cada input en el grid
-        const row = Math.floor(index / 9); // Calcula la fila del input actual
-        const col = index % 9; // Calcula la columna del input actual
+    inputs.forEach((input, index) => { 
+        const row = Math.floor(index / 9); 
+        const col = index % 9; 
 
-        if (input.value != solution[row][col]) { // Compara el valor del input con la solución
-            input.style.backgroundColor = "#ffdddd"; // Si el valor es incorrecto, cambia el fondo del input a rojo claro
-            correct = false; // Marca la solución como incorrecta
+        if (input.value != solution[row][col]) {
+            input.style.backgroundColor = "#ffdddd"; 
+            correct = false; 
         } else {
-            input.style.backgroundColor = "#ddffdd"; // Si el valor es correcto, cambia el fondo del input a verde claro
+            input.style.backgroundColor = "#ddffdd"; 
         }
     });
 
-    if (correct) { // Si todos los valores son correctos
-        clearInterval(control); // Detener el cronómetro
-        alert("Congratulations! You have solved the Sudoku."); // Muestra una alerta de felicitación
-        document.getElementById("save-score-button").style.display = "block"; // Muestra el botón de guardar puntaje
+    /* In this code block If all cells are correct, it stops the timer, displays a
+     congratulatory message, and displays the save score button. In addition,
+      true or false conditionals will be displayed with alerts according to their constraints.*/
+    
+      if (correct) {
+        clearInterval(control); 
+        alert("Congratulations! You have solved the Sudoku."); 
+        document.getElementById("save-score-button").style.display = "block"; 
     } else {
-        alert("It seems you haven't solved the puzzle yet. Keep trying! :)"); // Muestra una alerta indicando que hay errores
+        alert("It seems you haven't solved the puzzle yet. Keep trying! :)"); 
     }
 }
 
 
+/* The generateSudoku function creates a complete and valid Sudoku grid, 
+removes a specified number of cells to create a puzzle, and then returns the resulting grid.*/
 function generateSudoku() {
-    const board = Array.from({ length: 9 }, () => Array(9).fill(0)); // Crea una cuadrícula de 9x9 rellena de ceros
-    fillBoard(board); // Llama a la función para llenar la cuadrícula con un Sudoku válido
-    removeCells(board, 40); // Llama a la función para eliminar 40 celdas de la cuadrícula
-    return board; // Devuelve la cuadrícula generada
+    const board = Array.from({ length: 9 }, () => Array(9).fill(0)); 
+    fillBoard(board); 
+    removeCells(board, 40); 
+    return board; 
 }
+
+
+/*The fillBoard function attempts to fill a Sudoku grid recursively using backtracking.
+ It searches for empty cells, attempts to fill them with numbers from 1 to 9 in random order,
+ and checks whether the move is valid. If it finds a complete solution, it returns true; otherwise,
+ it undoes the last move and continues searching.*/
 
 function fillBoard(board) {
-    const emptyCells = findEmptyCells(board); // Encuentra todas las celdas vacías en la cuadrícula
-    if (emptyCells.length === 0) return true; // Si no hay celdas vacías, la cuadrícula está completa y válida
+    const emptyCells = findEmptyCells(board); 
+    if (emptyCells.length === 0) return true; 
 
-    const [row, col] = emptyCells[0]; // Toma la primera celda vacía encontrada
-    const numbers = shuffleArray([1, 2, 3, 4, 5, 6, 7, 8, 9]); // Baraja los números del 1 al 9
+    const [row, col] = emptyCells[0]; 
+    const numbers = shuffleArray([1, 2, 3, 4, 5, 6, 7, 8, 9]); 
 
-    for (let num of numbers) { // Itera sobre cada número barajado
-        if (isValidMove(board, row, col, num)) { // Verifica si el número se puede colocar en la celda
-            board[row][col] = num; // Coloca el número en la celda
-            if (fillBoard(board)) return true; // Llama recursivamente para llenar la siguiente celda
-            board[row][col] = 0; // Si no se puede completar, vacía la celda y prueba con el siguiente número
+    for (let num of numbers) { 
+        if (isValidMove(board, row, col, num)) { 
+            board[row][col] = num; 
+            if (fillBoard(board)) return true; 
+            board[row][col] = 0; 
         }
     }
 
-    return false; // Si no se puede colocar ningún número válido, devuelve false
+    return false;
 }
+
+
+/* The solveSudoku function attempts to solve a Sudoku grid recursively using backtracking.
+ It searches for empty cells, attempts to fill them with numbers from 1 to 9, and checks
+  whether the move is valid. If it finds a complete solution, it returns the solved grid; 
+  otherwise, it undoes the last move and continues searching.*/
 
 function solveSudoku(board) {
-    const emptyCells = findEmptyCells(board); // Encuentra todas las celdas vacías en la cuadrícula
-    if (emptyCells.length === 0) return board; // Si no hay celdas vacías, la cuadrícula está resuelta y se devuelve
+    const emptyCells = findEmptyCells(board); 
+    if (emptyCells.length === 0) return board; 
 
-    const [row, col] = emptyCells[0]; // Toma la primera celda vacía encontrada
+    const [row, col] = emptyCells[0]; 
 
-    for (let num = 1; num <= 9; num++) { // Itera sobre los números del 1 al 9
-        if (isValidMove(board, row, col, num)) { // Verifica si el número se puede colocar en la celda
-            board[row][col] = num; // Coloca el número en la celda
-            if (solveSudoku(board)) return board; // Llama recursivamente para resolver la siguiente celda, si se resuelve, devuelve la cuadrícula
-            board[row][col] = 0; // Si no se puede resolver, vacía la celda y prueba con el siguiente número
+    for (let num = 1; num <= 9; num++) { 
+        if (isValidMove(board, row, col, num)) { 
+            board[row][col] = num; 
+            if (solveSudoku(board)) return board; 
+            board[row][col] = 0; 
         }
     }
 
-    return false; // Si no se puede colocar ningún número válido, devuelve false indicando que no se puede resolver desde esta configuración
+    return false; 
 }
+
+/*The findEmptyCells function finds all empty cells (cells with value 0) 
+in a Sudoku grid and returns a list of these cells. */
 
 function findEmptyCells(board) {
-    const emptyCells = []; // Crea un array vacío para almacenar las celdas vacías
-    for (let row = 0; row < 9; row++) { // Itera sobre cada fila del tablero
-        for (let col = 0; col < 9; col++) { // Itera sobre cada columna del tablero
-            if (board[row][col] === 0) emptyCells.push([row, col]); // Si la celda está vacía (es 0), añade sus coordenadas al array
+    const emptyCells = [];  
+    for (let row = 0; row < 9; row++) {  
+        for (let col = 0; col < 9; col++) {  
+            if (board[row][col] === 0) emptyCells.push([row, col]);  
         }
     }
-    return emptyCells; // Devuelve el array con las celdas vacías
+    return emptyCells;  
 }
+
+/*The isValidMove function checks whether a number can be placed in a
+ specific position in a Sudoku grid without violating the rules of Sudoku.*/
 
 function isValidMove(board, row, col, num) {
-    for (let c = 0; c < 9; c++) { // Itera sobre cada columna de la fila
-        if (board[row][c] === num) return false; // Si el número ya está en la fila, devuelve false
+    for (let c = 0; c < 9; c++) {  
+        if (board[row][c] === num) return false;  
     }
 
-    for (let r = 0; r < 9; r++) { // Itera sobre cada fila de la columna
-        if (board[r][col] === num) return false; // Si el número ya está en la columna, devuelve false
+    for (let r = 0; r < 9; r++) {  
+        if (board[r][col] === num) return false;  
     }
-
-    const startRow = Math.floor(row / 3) * 3; // Calcula el inicio de la subcuadrícula 3x3
-    const startCol = Math.floor(col / 3) * 3; // Calcula el inicio de la subcuadrícula 3x3
-    for (let r = startRow; r < startRow + 3; r++) { // Itera sobre las filas de la subcuadrícula
-        for (let c = startCol; c < startCol + 3; c++) { // Itera sobre las columnas de la subcuadrícula
-            if (board[r][c] === num) return false; // Si el número ya está en la subcuadrícula, devuelve false
+  //This code block indicates the 3x3 subgrid to which the position (row, col) 
+  //being iterated belongs.
+    const startRow = Math.floor(row / 3) * 3;  
+    const startCol = Math.floor(col / 3) * 3;  
+    for (let r = startRow; r < startRow + 3; r++) {  
+        for (let c = startCol; c < startCol + 3; c++) {  
+            if (board[r][c] === num) return false;  
         }
     }
 
-    return true; // Si no hay conflictos, devuelve true
+    return true;  
 }
 
-
+/*The removeCells function removes a specific number of cells from the Sudoku grid,
+ replacing them with zeros to create the puzzle that the user will solve. */
 function removeCells(board, count) {
-    while (count > selectedOption()) { // Mientras queden celdas por eliminar
-        const row = Math.floor(Math.random() * 9); // Genera una fila aleatoria
-        const col = Math.floor(Math.random() * 9); // Genera una columna aleatoria
+    while (count > selectedOption()) { 
+        const row = Math.floor(Math.random() * 9); 
+        const col = Math.floor(Math.random() * 9);
 
-        if (board[row][col] !== 0) { // Si la celda no está vacía
-            board[row][col] = 0; // Vacía la celda
-            count--; // Decrementa el contador de celdas por eliminar
+        if (board[row][col] !== 0) { 
+            board[row][col] = 0; 
+            count--; 
         }
     }
 }
 
+
+//The shuffleArray function randomly shuffles the elements of an array using the algorithm
 function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) { // Itera desde el final del array hasta el principio
-        const j = Math.floor(Math.random() * (i + 1)); // Genera un índice aleatorio
-        [array[i], array[j]] = [array[j], array[i]]; // Intercambia los elementos en los índices i y j
+    for (let i = array.length - 1; i > 0; i--) { 
+        const j = Math.floor(Math.random() * (i + 1)); 
+        [array[i], array[j]] = [array[j], array[i]]; 
     }
-    return array; // Devuelve el array barajado
+    return array; 
 }
 
 
 function resetGame() {
-    resetTime(); // Reiniciar los valores de tiempo
+    resetTime(); // Reset time values
     document.getElementById("sudoku-grid").innerHTML = '';
     document.getElementById("inicio").disabled = false;
     document.getElementById("reinicio").disabled = true;
-    document.getElementById("save-score-button").style.display = "none"; // Ocultar el botón de guardar puntaje al reiniciar el juego
+    document.getElementById("save-score-button").style.display = "none";// Hide the save score button when restarting the game
 }
 
 

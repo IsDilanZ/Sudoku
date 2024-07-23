@@ -1,8 +1,11 @@
+// Variable to store the timer interval
 var segundos = 0;
 var minutos = 0;
 var horas = 0;
-var control; // Variable para almacenar el intervalo del cronómetro
+var control; 
 
+/*The resetTime function: Resets the time counters (seconds, minutes, hours)
+ to zero and updates the user interface to reflect this change.*/
 function resetTime() {
     segundos = 0;
     minutos = 0;
@@ -12,10 +15,15 @@ function resetTime() {
     document.getElementById("Segundos").innerText = ":00";
 }
 
+/*The getTime function: Returns the current stopwatch
+ time in hours:minutes:seconds format. */
 function getTime() {
-    return horas + ":" + minutos + ":" + segundos; // Devuelve el tiempo en formato HH:MM:SS
+    return horas + ":" + minutos + ":" + segundos;  
 }
 
+/*The stopwatch function: Increments the stopwatch time in
+ one-second intervals, updates the user interface to show elapsed time,
+  and handles switching from seconds to minutes and from minutes to hours.*/
 function cronometro() {
     segundos++;
 
